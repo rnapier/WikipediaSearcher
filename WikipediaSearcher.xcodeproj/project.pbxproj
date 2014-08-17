@@ -13,6 +13,14 @@
 		FB51606119A0EA1000C13524 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB51605F19A0EA1000C13524 /* Main.storyboard */; };
 		FB51606319A0EA1000C13524 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB51606219A0EA1000C13524 /* Images.xcassets */; };
 		FB51606F19A0EA1000C13524 /* WikipediaSearcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51606E19A0EA1000C13524 /* WikipediaSearcherTests.swift */; };
+		FB51607C19A0EA4500C13524 /* WikipediaSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607819A0EA4500C13524 /* WikipediaSearcher.swift */; };
+		FB51607D19A0EA4500C13524 /* WikipediaSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607819A0EA4500C13524 /* WikipediaSearcher.swift */; };
+		FB51607E19A0EA4500C13524 /* WikipediaPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607919A0EA4500C13524 /* WikipediaPage.swift */; };
+		FB51607F19A0EA4500C13524 /* WikipediaPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607919A0EA4500C13524 /* WikipediaPage.swift */; };
+		FB51608019A0EA4500C13524 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607A19A0EA4500C13524 /* Result.swift */; };
+		FB51608119A0EA4500C13524 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607A19A0EA4500C13524 /* Result.swift */; };
+		FB51608219A0EA4500C13524 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607B19A0EA4500C13524 /* JSON.swift */; };
+		FB51608319A0EA4500C13524 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607B19A0EA4500C13524 /* JSON.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +44,10 @@
 		FB51606819A0EA1000C13524 /* WikipediaSearcherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WikipediaSearcherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB51606D19A0EA1000C13524 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB51606E19A0EA1000C13524 /* WikipediaSearcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WikipediaSearcherTests.swift; sourceTree = "<group>"; };
+		FB51607819A0EA4500C13524 /* WikipediaSearcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WikipediaSearcher.swift; sourceTree = "<group>"; };
+		FB51607919A0EA4500C13524 /* WikipediaPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WikipediaPage.swift; sourceTree = "<group>"; };
+		FB51607A19A0EA4500C13524 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		FB51607B19A0EA4500C13524 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +89,10 @@
 		FB51605619A0EA1000C13524 /* WikipediaSearcher */ = {
 			isa = PBXGroup;
 			children = (
+				FB51607819A0EA4500C13524 /* WikipediaSearcher.swift */,
+				FB51607919A0EA4500C13524 /* WikipediaPage.swift */,
+				FB51607A19A0EA4500C13524 /* Result.swift */,
+				FB51607B19A0EA4500C13524 /* JSON.swift */,
 				FB51605919A0EA1000C13524 /* AppDelegate.swift */,
 				FB51605B19A0EA1000C13524 /* MasterViewController.swift */,
 				FB51605D19A0EA1000C13524 /* DetailViewController.swift */,
@@ -211,8 +227,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB51608019A0EA4500C13524 /* Result.swift in Sources */,
+				FB51608219A0EA4500C13524 /* JSON.swift in Sources */,
+				FB51607E19A0EA4500C13524 /* WikipediaPage.swift in Sources */,
 				FB51605E19A0EA1000C13524 /* DetailViewController.swift in Sources */,
 				FB51605C19A0EA1000C13524 /* MasterViewController.swift in Sources */,
+				FB51607C19A0EA4500C13524 /* WikipediaSearcher.swift in Sources */,
 				FB51605A19A0EA1000C13524 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,6 +241,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB51607F19A0EA4500C13524 /* WikipediaPage.swift in Sources */,
+				FB51608319A0EA4500C13524 /* JSON.swift in Sources */,
+				FB51607D19A0EA4500C13524 /* WikipediaSearcher.swift in Sources */,
+				FB51608119A0EA4500C13524 /* Result.swift in Sources */,
 				FB51606F19A0EA1000C13524 /* WikipediaSearcherTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
