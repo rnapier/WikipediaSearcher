@@ -11,14 +11,24 @@ import Foundation
 // Inspired by http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics
 
 typealias JSON = AnyObject
-typealias JSONDictionary = Dictionary<String, JSON>
-typealias JSONObject = JSONDictionary
 typealias JSONArray = [JSON]
 
-func ParseJSON(#data: NSData) -> Result<JSON> {
+//enum JSONResult {
+//  case Success(JSON)
+//  case Failure(NSError)
+//}
 
-  var jsonError: NSError?
-  let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: &jsonError)
+func asJSON(data: NSData) -> Result<JSON> {
+  var error: NSError?
+  let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: &error)
 
-  return Result(value: json, error: jsonError)
+  switch (json, error) {
+  case (_, .Some(let error)): return .Failure(error)
+
+  case (.Some(let json), _): return .Success(Box(json))
+
+  default:
+    fatalError("Received neither JSON nor an error")
+    return .Failure(NSError())
+  }
 }

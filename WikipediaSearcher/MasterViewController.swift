@@ -12,11 +12,11 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
 
   @IBOutlet var searchController: UISearchController!
 
-  let searcher = WikipediaSearcher()
-  var currentSearch: WikipediaSearch?
+  let searcher = Searcher()
+  var currentSearch: Search?
 
   var detailViewController: DetailViewController? = nil
-  var pages = [WikipediaPage]()
+  var pages = [Page]()
 
 
   override func awakeFromNib() {

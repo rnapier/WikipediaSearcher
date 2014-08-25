@@ -24,12 +24,12 @@ class WikiStuffTests: XCTestCase {
 
   func testGoodPages() {
     let data = goodPagesJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-    XCTAssert(data.hasValue, "Failed to create data")
+    XCTAssert(data != nil, "Failed to create data")
 
-    let pages = pagesFromData(data!)
+    let pages = pagesFromData3(data!)
     switch pages {
-    case .Success(let boxa):
-      XCTAssertEqual(boxa.unbox.count, 15)
+    case .Success(let pages):
+      XCTAssertEqual(pages.unbox.count, 15)
     case .Failure(let err):
       XCTFail("pages failed: \(err)")
     }
@@ -37,9 +37,9 @@ class WikiStuffTests: XCTestCase {
 
   func testCorruptJSON() {
     let data = corruptJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-    XCTAssert(data.hasValue, "Failed to create data")
+    XCTAssert(data != nil, "Failed to create data")
 
-    let pages = pagesFromData(data!)
+    let pages = pagesFromData3(data!)
     switch pages {
     case .Success(let boxa):
       XCTFail("Parsed when it shouldn't have: \(boxa)")
@@ -50,40 +50,40 @@ class WikiStuffTests: XCTestCase {
 
   func testMissingArray() {
     let data = missingArray.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-    XCTAssert(data.hasValue, "Failed to create data")
+    XCTAssert(data != nil, "Failed to create data")
 
-    let pages = pagesFromData(data!)
+    let pages = pagesFromData3(data!)
     switch pages {
     case .Success(let boxa):
       XCTFail("Parsed when it shouldn't have: \(boxa)")
     case .Failure(let err):
-      XCTAssert(err.localizedDescription!.hasPrefix("Expected array, received"))
+      XCTAssert(err.localizedDescription.hasPrefix("Expected array."), err.localizedDescription)
     }
   }
 
   func testShortArray() {
     let data = shortArray.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-    XCTAssert(data.hasValue, "Failed to create data")
+    XCTAssert(data != nil, "Failed to create data")
 
-    let pages = pagesFromData(data!)
+    let pages = pagesFromData3(data!)
     switch pages {
     case .Success(let boxa):
       XCTFail("Parsed when it shouldn't have: \(boxa)")
     case .Failure(let err):
-      XCTAssert(err.localizedDescription!.hasPrefix("Unexpected array length"), err.localizedDescription)
+      XCTAssert(err.localizedDescription.hasPrefix("Could not get second element."), err.localizedDescription)
     }
   }
 
   func testNotStringList () {
     let data = notStringList.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-    XCTAssert(data.hasValue, "Failed to create data")
+    XCTAssert(data != nil, "Failed to create data")
 
     let pages = pagesFromData(data!)
     switch pages {
     case .Success(let boxa):
       XCTFail("Parsed when it shouldn't have: \(boxa)")
     case .Failure(let err):
-      XCTAssert(err.localizedDescription!.hasPrefix("Unexpected string list"), err.localizedDescription)
+      XCTAssert(err.localizedDescription.hasPrefix("Expected string list."), err.localizedDescription)
     }
   }
 }

@@ -69,10 +69,7 @@ func ??<T>(result: Result<T>, defaultValue: @autoclosure () -> T) -> T {
 
 final class Box<T> {
   let unbox: T
-
-  init(_ value: T) {
-    self.unbox = value
-  }
+  init(_ value: T) { self.unbox = value }
 }
 
 extension NSError {
