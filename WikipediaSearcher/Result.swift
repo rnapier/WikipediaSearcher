@@ -118,6 +118,29 @@ final class Box<T> {
   init(_ value: T) { self.unbox = value }
 }
 
+infix operator >>== {associativity left}
+
+func >>==<A,B>(a: Result<A>, f: A -> Result<B>) -> Result<B> {
+  return a.flatMap(f)
+}
+
+infix operator <*> {associativity left}
+
+func <*><A,B>(f: A -> B, a: Result<A>) -> Result<B> {
+  return a.map(f)
+}
+
+infix operator <**> {associativity left}
+func <**><A,B>(a: Result<A>, f: A -> B) -> Result<B> {
+  return a.map(f)
+}
+
+infix operator <^> {associativity left}
+
+func <^><A,B>(f: A -> B, a: A) -> Result<B> {
+  return f <*> .Success(Box(a))
+}
+
 extension NSError {
   convenience init(localizedDescription: String) {
     self.init(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: localizedDescription])

@@ -14,8 +14,8 @@ struct Page {
 
 func pagesFromOpenSearchData(data: NSData) -> Result<[Page]> {
   return asJSON(data)
-    .flatMap(asJSONArray)
-    .flatMap(atIndex(1))
-    .flatMap(asStringList)
-    .flatMap(asPages)
+    >>== asJSONArray
+    >>== atIndex(1)
+    >>== asStringList
+    >>== asPages
 }
