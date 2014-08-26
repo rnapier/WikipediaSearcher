@@ -21,6 +21,8 @@
 		FB51608119A0EA4500C13524 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607A19A0EA4500C13524 /* Result.swift */; };
 		FB51608219A0EA4500C13524 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607B19A0EA4500C13524 /* JSON.swift */; };
 		FB51608319A0EA4500C13524 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB51607B19A0EA4500C13524 /* JSON.swift */; };
+		FBD3FF6619AC359F006AF330 /* RandomCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD3FF6519AC359F006AF330 /* RandomCollectionViewController.swift */; };
+		FBD3FF6819AC360A006AF330 /* RandomPageGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD3FF6719AC360A006AF330 /* RandomPageGenerator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,8 @@
 		FB51607919A0EA4500C13524 /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		FB51607A19A0EA4500C13524 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		FB51607B19A0EA4500C13524 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		FBD3FF6519AC359F006AF330 /* RandomCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomCollectionViewController.swift; sourceTree = "<group>"; };
+		FBD3FF6719AC360A006AF330 /* RandomPageGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomPageGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +101,8 @@
 				FB51605B19A0EA1000C13524 /* MasterViewController.swift */,
 				FB51605D19A0EA1000C13524 /* DetailViewController.swift */,
 				FB51605F19A0EA1000C13524 /* Main.storyboard */,
+				FBD3FF6519AC359F006AF330 /* RandomCollectionViewController.swift */,
+				FBD3FF6719AC360A006AF330 /* RandomPageGenerator.swift */,
 				FB51606219A0EA1000C13524 /* Images.xcassets */,
 				FB51605719A0EA1000C13524 /* Supporting Files */,
 			);
@@ -229,7 +235,9 @@
 			files = (
 				FB51608019A0EA4500C13524 /* Result.swift in Sources */,
 				FB51608219A0EA4500C13524 /* JSON.swift in Sources */,
+				FBD3FF6819AC360A006AF330 /* RandomPageGenerator.swift in Sources */,
 				FB51607E19A0EA4500C13524 /* Page.swift in Sources */,
+				FBD3FF6619AC359F006AF330 /* RandomCollectionViewController.swift in Sources */,
 				FB51605E19A0EA1000C13524 /* DetailViewController.swift in Sources */,
 				FB51605C19A0EA1000C13524 /* MasterViewController.swift in Sources */,
 				FB51607C19A0EA4500C13524 /* Searcher.swift in Sources */,
@@ -425,6 +433,7 @@
 				FB51607419A0EA1000C13524 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FB51607519A0EA1000C13524 /* Build configuration list for PBXNativeTarget "WikipediaSearcherTests" */ = {
 			isa = XCConfigurationList;
@@ -433,6 +442,7 @@
 				FB51607719A0EA1000C13524 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

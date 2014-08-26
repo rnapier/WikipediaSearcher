@@ -26,7 +26,7 @@ class WikiStuffTests: XCTestCase {
     let data = goodPagesJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
     XCTAssert(data != nil, "Failed to create data")
 
-    let pages = pagesFromData3(data!)
+    let pages = pagesFromOpenSearchData(data!)
     switch pages {
     case .Success(let pages):
       XCTAssertEqual(pages.unbox.count, 15)
@@ -39,7 +39,7 @@ class WikiStuffTests: XCTestCase {
     let data = corruptJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
     XCTAssert(data != nil, "Failed to create data")
 
-    let pages = pagesFromData3(data!)
+    let pages = pagesFromOpenSearchData(data!)
     switch pages {
     case .Success(let boxa):
       XCTFail("Parsed when it shouldn't have: \(boxa)")
@@ -52,7 +52,7 @@ class WikiStuffTests: XCTestCase {
     let data = missingArray.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
     XCTAssert(data != nil, "Failed to create data")
 
-    let pages = pagesFromData3(data!)
+    let pages = pagesFromOpenSearchData(data!)
     switch pages {
     case .Success(let boxa):
       XCTFail("Parsed when it shouldn't have: \(boxa)")
@@ -65,7 +65,7 @@ class WikiStuffTests: XCTestCase {
     let data = shortArray.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
     XCTAssert(data != nil, "Failed to create data")
 
-    let pages = pagesFromData3(data!)
+    let pages = pagesFromOpenSearchData(data!)
     switch pages {
     case .Success(let boxa):
       XCTFail("Parsed when it shouldn't have: \(boxa)")
@@ -78,7 +78,7 @@ class WikiStuffTests: XCTestCase {
     let data = notStringList.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
     XCTAssert(data != nil, "Failed to create data")
 
-    let pages = pagesFromData(data!)
+    let pages = pagesFromOpenSearchData(data!)
     switch pages {
     case .Success(let boxa):
       XCTFail("Parsed when it shouldn't have: \(boxa)")

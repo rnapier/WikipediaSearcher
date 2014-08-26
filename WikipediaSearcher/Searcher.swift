@@ -24,7 +24,7 @@ func ??(result: PageListResult, defaultValue: @autoclosure () -> [Page]) -> [Pag
 struct Searcher {
   let queue: NSOperationQueue = NSOperationQueue.mainQueue()
 
-  func search(text: String, completionHandler: (PageListResult) -> Void) -> Search {
+  func search(text: String, completionHandler: (Result<[Page]>) -> Void) -> Search {
     return Search(text: text, queue: self.queue, completionHandler: completionHandler)
   }
 }
@@ -32,7 +32,7 @@ struct Searcher {
 struct Search {
   let task: NSURLSessionDataTask
 
-  init(text: String, queue: NSOperationQueue, completionHandler: PageListResult -> Void) {
+  init(text: String, queue: NSOperationQueue, completionHandler: Result<[Page]> -> Void) {
     let url = searchURLForString(text)
 
     self.task = NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: pageHandler(queue: queue, completionHandler: completionHandler))
@@ -44,7 +44,7 @@ struct Search {
   }
 }
 
-private func pageHandler(#queue: NSOperationQueue, #completionHandler: PageListResult -> Void)
+private func pageHandler(#queue: NSOperationQueue, #completionHandler: Result<[Page]> -> Void)
   (data: NSData?, _: NSURLResponse?, error: NSError?) {
 
     switch (data, error) {
@@ -56,7 +56,7 @@ private func pageHandler(#queue: NSOperationQueue, #completionHandler: PageListR
       queue.addOperationWithBlock({completionHandler(.Failure(error))})
 
     case (.Some(let data), _):
-      queue.addOperationWithBlock({completionHandler(pagesFromData(data))})
+      queue.addOperationWithBlock({completionHandler(pagesFromOpenSearchData(data))})
 
     default:
       fatalError("Did not receive an error or data.")
@@ -74,108 +74,86 @@ extension NSError {
 /// VERSION 1
 ///
 
-func pagesFromData(data: NSData) -> PageListResult {
-
-  // 1. Parse the NSData into a JSON object
-  var error: NSError?
-  let json: JSON? = NSJSONSerialization.JSONObjectWithData(data,
-    options: NSJSONReadingOptions(0), error: &error)
-
-  if let json: JSON = json {
-
-    // 2. Make sure the JSON object is an array
-    if let array = json as? JSONArray {
-
-      // 3. Get the second element
-      if array.count < 2 {
-        // Failure leg for 3
-        return .Failure(NSError(localizedDescription:
-          "Could not get second element. Array too short: \(array.count)"))
-      }
-      let element: JSON = array[1]
-
-      // 4. Make sure the second element is a list of strings
-      if let titles = element as? [String] {
-
-        // 5. Convert those strings into pages
-        return .Success(titles.map { Page(title: $0) })
-      }
-      else {
-        // Failure leg for 4
-        return .Failure(NSError(localizedDescription: "Expected string list. Got: \(array[1])"))
-      }
-    }
-    else {
-      // Failure leg for 2
-      return .Failure(NSError(localizedDescription: "Expected array. Got: \(json)"))
-    }
-  }
-  else if let error = error {
-    // Failure leg for 1
-    return .Failure(error)
-  }
-  else {
-    fatalError("Received neither JSON nor an error")
-    return .Failure(NSError())
-  }
-}
-
-func pagesFromData2(data: NSData) -> Result<[Page]> {
-
-  // 1. Parse the NSData into a JSON object
-  switch asJSON(data) {
-  case .Success(let boxJson):
-
-    // 2. Make sure the JSON object is an array
-    switch asJSONArray(boxJson.unbox) {
-    case .Success(let boxArray):
-
-      // 3. Get the second element
-      switch secondElement(boxArray.unbox) {
-      case .Success(let elementBox):
-
-        // 4. Make sure the second element is a list of strings
-        switch asStringList(elementBox.unbox) {
-        case .Success(let titlesBox):
-
-          // 5. Convert those strings into pages
-          return asPages(titlesBox.unbox)
-
-        case .Failure(let error):
-          return .Failure(error)
-        }
-      case .Failure(let error):
-        return .Failure(error)
-      }
-    case .Failure(let error):
-      return .Failure(error)
-    }
-  case .Failure(let error):
-    return .Failure(error)
-  }
-}
-
-func flatMap<A,B>(a: Result<A>, f: A -> Result<B>) -> Result<B> {
-  switch a {
-  case .Success(let boxA):
-    return f(boxA.unbox)
-  case .Failure(let err):
-    return .Failure(err)
-  }
-}
-
-
-func pagesFromData3(data: NSData) -> Result<[Page]> {
-  return flatMap(asJSON(data)) {
-    flatMap(asJSONArray($0)) {
-      flatMap(secondElement($0)) {
-        flatMap(asStringList($0)) {
-          asPages($0)
-        }
-      }
-    }
-  }
-}
+//func pagesFromOpenSearchData(data: NSData) -> PageListResult {
+//
+//  // 1. Parse the NSData into a JSON object
+//  var error: NSError?
+//  let json: JSON? = NSJSONSerialization.JSONObjectWithData(data,
+//    options: NSJSONReadingOptions(0), error: &error)
+//
+//  if let json: JSON = json {
+//
+//    // 2. Make sure the JSON object is an array
+//    if let array = json as? JSONArray {
+//
+//      // 3. Get the second element
+//      if array.count < 2 {
+//        // Failure leg for 3
+//        return .Failure(NSError(localizedDescription:
+//          "Could not get second element. Array too short: \(array.count)"))
+//      }
+//      let element: JSON = array[1]
+//
+//      // 4. Make sure the second element is a list of strings
+//      if let titles = element as? [String] {
+//
+//        // 5. Convert those strings into pages
+//        return .Success(titles.map { Page(title: $0) })
+//      }
+//      else {
+//        // Failure leg for 4
+//        return .Failure(NSError(localizedDescription: "Expected string list. Got: \(array[1])"))
+//      }
+//    }
+//    else {
+//      // Failure leg for 2
+//      return .Failure(NSError(localizedDescription: "Expected array. Got: \(json)"))
+//    }
+//  }
+//  else if let error = error {
+//    // Failure leg for 1
+//    return .Failure(error)
+//  }
+//  else {
+//    fatalError("Received neither JSON nor an error")
+//    return .Failure(NSError())
+//  }
+//}
+//
+//func pagesFromOpenSearchData2(data: NSData) -> Result<[Page]> {
+//
+//  // 1. Parse the NSData into a JSON object
+//  switch asJSON(data) {
+//  case .Success(let boxJson):
+//
+//    // 2. Make sure the JSON object is an array
+//    switch asJSONArray(boxJson.unbox) {
+//    case .Success(let boxArray):
+//
+//      // 3. Get the second element
+//      switch secondElement(boxArray.unbox) {
+//      case .Success(let elementBox):
+//
+//        // 4. Make sure the second element is a list of strings
+//        switch asStringList(elementBox.unbox) {
+//        case .Success(let titlesBox):
+//
+//          // 5. Convert those strings into pages
+//          return asPages(titlesBox.unbox)
+//
+//        case .Failure(let error):
+//          return .Failure(error)
+//        }
+//      case .Failure(let error):
+//        return .Failure(error)
+//      }
+//    case .Failure(let error):
+//      return .Failure(error)
+//    }
+//  case .Failure(let error):
+//    return .Failure(error)
+//  }
+//}
 
 
 //private func pagesFromJSON(json: JSON) -> Result<[WikipediaPage]> {
@@ -199,32 +177,6 @@ func pagesFromData3(data: NSData) -> Result<[Page]> {
 /// VERSION 2
 ///
 
-func asJSONArray(json: JSON) -> Result<JSONArray> {
-  if let array = json as? JSONArray {
-    return .Success(Box(array))
-  } else {
-    return .Failure(NSError(localizedDescription: "Expected array. Got: \(json)"))
-  }
-}
-
-func secondElement(array: JSONArray) -> Result<JSON> {
-  if array.count < 2 {
-    return .Failure(NSError(localizedDescription:"Could not get second element. Array too short: \(array.count)"))
-  }
-  return .Success(Box(array[1]))
-}
-
-func asStringList(array: JSON) -> Result<[String]> {
-  if let string = array as? [String] {
-    return .Success(Box(string))
-  } else {
-    return .Failure(NSError(localizedDescription: "Unexpected string list: \(array)"))
-  }
-}
-
-func asPages(titles: [String]) -> Result<[Page]> {
-  return .Success(Box(titles.map { Page(title: $0) }))
-}
 //
 //func AsPages(titles: [String]) -> PageListResult {
 //  return success(titles.map { Page(title: $0) })

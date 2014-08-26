@@ -37,6 +37,13 @@ enum Result<A> {
       fatalError("Received both or neither value and error")
       self = .Failure(NSError(localizedDescription:"Received both or neither value and error"))
     }
+
+    func isSuccess() -> Bool {
+      switch self {
+      case .Success(_): return true
+      case .Failure(_): return false
+    }
+}
   }
 
   func map<B>(f: A -> B) -> Result<B> {
@@ -58,6 +65,45 @@ enum Result<A> {
   }
 }
 
+func flatMap<A,B>(a: Result<A>, f: A -> Result<B>) -> Result<B> {
+  switch a {
+  case .Success(let boxA):
+    return f(boxA.unbox)
+  case .Failure(let err):
+    return .Failure(err)
+  }
+}
+
+func successes<A>(results: [Result<A>]) -> [A] {
+  return results.reduce([A]()) { successes, result in
+    switch result {
+      case .Success(let value): return successes + [value.unbox]
+      case .Failure(_): return successes
+    }
+  }
+}
+
+func failures<A>(results: [Result<A>]) -> [NSError] {
+  return results.reduce([NSError]()) { failures, result in
+    switch result {
+      case .Success(_): return failures
+      case .Failure(let error): return failures + [error]
+    }
+  }
+}
+
+func toSingleResult<A>(results: [Result<A>]) -> Result<[A]> {
+  return results.reduce(Result.Success(Box([A]()))) { acc, result in
+    switch (acc, result) {
+      case (.Success(let successes), .Success(let success)):
+        return .Success(Box(successes.unbox + [success.unbox]))
+      case (.Success(let successes), .Failure(let error)):
+        return .Failure(error)
+      default: return acc
+    }
+  }
+}
+
 func ??<T>(result: Result<T>, defaultValue: @autoclosure () -> T) -> T {
   switch result {
   case .Success(let value):
@@ -75,5 +121,8 @@ final class Box<T> {
 extension NSError {
   convenience init(localizedDescription: String) {
     self.init(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: localizedDescription])
+  }
+  convenience init(localizedDescription: String, underlyingError: NSError) {
+    self.init(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: localizedDescription, NSUnderlyingErrorKey: underlyingError])
   }
 }
