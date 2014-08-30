@@ -84,14 +84,14 @@ func asPages(titles: [String]) -> Result<[Page]> {
 
 func asPage(dictionary: JSONDictionary) -> Result<Page> {
   return success(dictionary)
-    >>== forKey("title")
-    >>== asString
+    >>== forKey("title") >>== asString
     <**> { Page(title: $0) }
 }
 
 func asPages(array: JSONArray) -> Result<[Page]> {
-  return toSingleResult(array.map {
-    success($0) >>== asJSONDictionary >>== asPage
+  return sequence(array.map {
+    success($0) >>== asJSONDictionary
+      >>== asPage
     })
 }
 

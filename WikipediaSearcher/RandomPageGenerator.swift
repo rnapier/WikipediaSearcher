@@ -28,7 +28,7 @@ class RandomPageGenerator {
   }
 }
 
-func pagesFromRandomQueryData(data: NSData) -> Result<[Page]> {
+private func pagesFromRandomQueryData(data: NSData) -> Result<[Page]> {
   return asJSON(data)     >>== asJSONDictionary
     >>== forKey("query")  >>== asJSONDictionary
     >>== forKey("random") >>== asJSONArray

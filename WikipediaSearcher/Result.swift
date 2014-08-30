@@ -23,7 +23,6 @@ enum Result<A> {
   case Success(Box<A>)
   case Failure(NSError)
 
-
   // This idea from http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics
   // Turns out to be pretty handy for converting ObjC callbacks
   init(value: A?, error: NSError?) {
@@ -92,7 +91,7 @@ func failures<A>(results: [Result<A>]) -> [NSError] {
   }
 }
 
-func toSingleResult<A>(results: [Result<A>]) -> Result<[A]> {
+func sequence<A>(results: [Result<A>]) -> Result<[A]> {
   return results.reduce(Result.Success(Box([A]()))) { acc, result in
     switch (acc, result) {
       case (.Success(let successes), .Success(let success)):

@@ -10,10 +10,18 @@ import UIKit
 
 let reuseIdentifier = "Cell"
 
+extension Array {
+  func flatMap<U>(f: T ->[U]) -> [U] {
+    return self.reduce([U]()) { (acc, t) in
+      return acc + f(t)
+    }
+  }
+}
+
 class RandomCollectionViewController: UICollectionViewController {
 
   let randomPageGenerator = RandomPageGenerator()
-  var pages = [Page]()
+  var pageImages = [(UIImage, Page)]()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -26,7 +34,7 @@ class RandomCollectionViewController: UICollectionViewController {
 
     switch self.randomPageGenerator.nextPages(10) {
     case .Success(let pages):
-      self.pages = pages.unbox
+      self.pageImages = pages.unbox.flatMap(pageImagesForPage)
     case .Failure(let error):
       println(error)
     }
@@ -102,3 +110,8 @@ class RandomCollectionViewController: UICollectionViewController {
   */
 
 }
+
+func pageImagesForPage(page: Page) -> [(UIImage, Page)] {
+
+}
+
