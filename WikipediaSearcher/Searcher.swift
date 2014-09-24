@@ -23,7 +23,7 @@ extension NSError {
 }
 
 private func searchURLForString(text: String) -> NSURL {
-  return NSURL(string: "http://en.wikipedia.org/w/api.php?action=opensearch&limit=15&search=\(text)&format=json")
+  return NSURL(string: "http://en.wikipedia.org/w/api.php?action=opensearch&limit=15&search=\(text)&format=json")!
 }
 
 func pagesFromOpenSearchData(data: NSData) -> Result<[Page]> {

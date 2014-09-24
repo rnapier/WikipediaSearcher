@@ -26,18 +26,16 @@ class RandomCollectionViewController: UICollectionViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = false
-
     // Register cell classes
-    self.collectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+    self.collectionView?.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
-    switch self.randomPageGenerator.nextPages(10) {
-    case .Success(let pages):
-      self.pageImages = pages.unbox.flatMap(pageImagesForPage)
-    case .Failure(let error):
-      println(error)
-    }
+    // TODO: working here
+//    switch self.randomPageGenerator.requestPages(10, {_ in return}) {
+//    case .Success(let pages):
+//      self.pageImages = pages.unbox.flatMap(pageImagesForPage)
+//    case .Failure(let error):
+//      println(error)
+//    }
 
     // Do any additional setup after loading the view.
   }
@@ -65,12 +63,12 @@ class RandomCollectionViewController: UICollectionViewController {
   //    }
 
 
-  override func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
+  override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     //#warning Incomplete method implementation -- Return the number of items in the section
     return 0
   }
 
-  override func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
+  override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as UICollectionViewCell
 
     // Configure the cell
@@ -110,8 +108,3 @@ class RandomCollectionViewController: UICollectionViewController {
   */
 
 }
-
-func pageImagesForPage(page: Page) -> [(UIImage, Page)] {
-
-}
-

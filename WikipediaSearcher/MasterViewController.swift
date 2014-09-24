@@ -27,7 +27,7 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    let controllers = self.splitViewController.viewControllers
+    let controllers = self.splitViewController!.viewControllers // FIXME: Rethink this pattern
     self.detailViewController = controllers[controllers.count-1].topViewController as? DetailViewController
 
     // Create the search controller, but we'll make sure that this SearchShowResultsInSourceViewController
@@ -51,12 +51,13 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
 
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == "showDetail" {
-      let indexPath = self.tableView.indexPathForSelectedRow()
+      if let indexPath = self.tableView.indexPathForSelectedRow() {
       let object = self.pages[indexPath.row]
       let controller = (segue.destinationViewController as UINavigationController).topViewController as DetailViewController
       controller.detailItem = object.title
-      controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem()
+      controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
       controller.navigationItem.leftItemsSupplementBackButton = true
+      }
     }
   }
 
@@ -70,20 +71,19 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
     let cell = self.tableView.dequeueReusableCellWithIdentifier("Cell") as UITableViewCell
 
     let object = pages[indexPath.row]
-    cell.textLabel.text = object.title
+    cell.textLabel?.text = object.title
     return cell
   }
 
   // MARK: - Searchbar
 
-  func updateSearchResultsForSearchController(searchController: UISearchController!) {
+  func updateSearchResultsForSearchController(searchController: UISearchController) {
     self.currentSearch?.cancel()
 
     let searchString = searchController.searchBar.text
 
     self.currentSearch = self.searcher.search(searchString, completionHandler: { result in
       self.pages = result ?? []
-      
       self.tableView.reloadData()
       }
     )

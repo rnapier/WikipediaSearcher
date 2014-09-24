@@ -8,23 +8,12 @@
 
 import Foundation
 
-class RandomPageGenerator {
-  func nextPages(count: Int) -> Result<[Page]> {
-    let randomURL = "http://en.wikipedia.org/w/api.php?action=query&format=json&list=random&rnlimit=\(count)"
-    var error: NSError?
-    let data = NSURLConnection.sendSynchronousRequest(NSURLRequest(URL: NSURL(string: randomURL)), returningResponse: nil, error: &error)
+typealias RandomPagesRequest = Operation<[Page]>
 
-    switch (data, error) {
-
-    case (_, .Some(let error)):
-      return .Failure(error)
-
-    case (.Some(let data), _):
-      return pagesFromRandomQueryData(data)
-
-    default:
-      fatalError("Did not receive an error or data.")
-    }
+class RandomPageGenerator: OperationHandler {
+  func requestPages(count: Int, completionHandler: (Result<[Page]>) -> Void) -> RandomPagesRequest {
+    let url = NSURL(string:"http://en.wikipedia.org/w/api.php?action=query&format=json&list=random&rnlimit=\(count)")!
+    return Operation(url: url, queue: queue, parser: pagesFromRandomQueryData, completionHandler: completionHandler)
   }
 }
 
