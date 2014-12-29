@@ -23,13 +23,17 @@ extension NSError {
 }
 
 private func searchURLForString(text: String) -> NSURL {
-  return NSURL(string: "http://en.wikipedia.org/w/api.php?action=opensearch&limit=15&search=\(text)&format=json")!
+  let url = (text as NSString).stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+    .map { "http://en.wikipedia.org/w/api.php?action=opensearch&limit=15&search=\($0)&format=json" }
+    .flatMap { NSURL(string: $0) }
+
+  precondition(url.isSome(), "Could not encode URL")
+  return url!
 }
 
 func pagesFromOpenSearchData(data: NSData) -> Result<[Page]> {
   return asJSON(data)
-    >>== asJSONArray
-    >>== atIndex(1)
-    >>== asStringList
-    >>== asPages
+    .flatMap( asJSONArray )
+    .flatMap( atIndex(1) ).flatMap( asStringList )
+    .flatMap( asPages )
 }

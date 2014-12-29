@@ -148,3 +148,21 @@ extension NSError {
     self.init(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: localizedDescription, NSUnderlyingErrorKey: underlyingError])
   }
 }
+
+extension Optional {
+  func flatMap<U>(f: T -> U?) -> U? {
+    if let t = self {
+      if let u = f(t) {
+        return u
+      }
+    }
+    return nil
+  }
+
+  func isSome() -> Bool {
+    switch self {
+    case .Some(_): return true
+    case .None: return false
+    }
+  }
+}
