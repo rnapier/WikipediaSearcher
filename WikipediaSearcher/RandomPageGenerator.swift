@@ -18,8 +18,8 @@ class RandomPageGenerator: OperationHandler {
 }
 
 private func pagesFromRandomQueryData(data: NSData) -> Result<[Page]> {
-    return failure(NSError(localizedDescription: "Not implemented"))
-//  return asJSON(data)     >>== asJSONDictionary
+  return failure(NSError(localizedDescription: "Not implemented"))
+//    asJSON(data)     >>== asJSONDictionary
 //    >>== forKey("query")  >>== asJSONDictionary
 //    >>== forKey("random") >>== asJSONArray
 //    >>== asPages

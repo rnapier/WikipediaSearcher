@@ -14,72 +14,52 @@ typealias JSON = AnyObject
 typealias JSONArray = [JSON]
 typealias JSONDictionary = [String: JSON]
 
-func asJSON(data: NSData) -> Result<JSON> {
-  var error: NSError?
-  let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: &error)
-
-  switch (json, error) {
-  case (_, .Some(let error)):
-    let jsonString = NSString(data: data, encoding: NSUTF8StringEncoding)
-    return .Failure(NSError(localizedDescription: "Expected JSON. Got: \(jsonString)", underlyingError: error))
-
-  case (.Some(let json), _):
-    return .Success(Box(json))
-
-  default:
-    fatalError("Received neither JSON nor an error")
-    return .Failure(NSError())
-  }
+func failedWith<T>(errorPointer: NSErrorPointer, error: NSError) -> T? {
+    if errorPointer != nil {
+        errorPointer.memory = error
+    }
+    return nil
 }
 
-func asJSONArray(json: JSON) -> Result<JSONArray> {
-  if let array = json as? JSONArray {
-    return .Success(Box(array))
-  } else {
-    return .Failure(NSError(localizedDescription: "Expected array. Got: \(json)"))
-  }
+func asJSON(data: NSData, error: NSErrorPointer) -> JSON? {
+    return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: error)
 }
 
-func asJSONDictionary(json: JSON) -> Result<JSONDictionary> {
-  if let dictionary = json as? JSONDictionary {
-    return .Success(Box(dictionary))
-  } else {
-    return .Failure(NSError(localizedDescription: "Expected dictionary. Got: \(json)"))
-  }
+func asJSONArray(json: JSON, error: NSErrorPointer) -> JSONArray? {
+    return json as? JSONArray
+        ?? failedWith(error, NSError(localizedDescription: "Expected array. Got: \(json)"))
 }
 
-func atIndex(index: Int)(array: JSONArray) -> Result<JSON> {
-  if array.count < index {
-    return .Failure(NSError(localizedDescription:"Could not get element at index (\(index)). Array too short: \(array.count)"))
-  }
-  return .Success(Box(array[index]))
+func asJSONDictionary(json: JSON, error: NSErrorPointer) -> JSONDictionary? {
+    return json as? JSONDictionary
+        ?? failedWith(error, NSError(localizedDescription: "Expected dictionary. Got: \(json)"))
 }
 
-func forKey(key: String)(dictionary: JSONDictionary) -> Result<JSON> {
-  if let value: JSON = dictionary[key] {
-    return .Success(Box(value))
-  } else {
-    return .Failure(NSError(localizedDescription: "Could not find element for key (\(key))."))
-  }
+func atIndex(array: JSONArray, index: Int, error: NSErrorPointer) -> JSON? {
+    if array.count < index {
+        return failedWith(error, NSError(localizedDescription:"Could not get element at index (\(index)). Array too short: \(array.count)"))
+    }
+    return array[index]
 }
 
-func asString(json: JSON) -> Result<String> {
-  if let string = json as? String {
-    return .Success(Box(string))
-  } else {
-    return .Failure(NSError(localizedDescription: "Expected string. Got: \(json)"))
-  }
-}
-func asStringList(json: JSON) -> Result<[String]> {
-  if let stringList = json as? [String] {
-    return .Success(Box(stringList))
-  } else {
-    return .Failure(NSError(localizedDescription: "Expected string list. Got: \(json)"))
-  }
+func forKey(dictionary: JSONDictionary, key: String, error: NSErrorPointer) -> JSON? {
+    return dictionary[key]
+        ?? failedWith(error, NSError(localizedDescription: "Could not find element for key (\(key))."))
 }
 
-func asPages(titles: [String]) -> Result<[Page]> {
-  return .Success(Box(titles.map { Page(title: $0) }))
+func asString(json: JSON, error: NSErrorPointer) -> String? {
+    return json as? String
+        ?? failedWith(error, NSError(localizedDescription: "Expected string. Got: \(json)"))
+}
+
+
+func asStringList(json: JSON, error: NSErrorPointer) -> [String]? {
+    return json as? [String]
+        ?? failedWith(error, NSError(localizedDescription: "Expected string list. Got: \(json)"))
+}
+
+func asPages(titles: [String]) -> [Page] {
+    return titles.map { Page(title: $0) }
 }
 
 //func asPage(dictionary: JSONDictionary) -> Result<Page> {
