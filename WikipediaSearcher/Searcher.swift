@@ -23,21 +23,24 @@ extension NSError {
 }
 
 private func searchURLForString(text: String) -> NSURL {
-    let url = (text as NSString).stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
-        .map { "http://en.wikipedia.org/w/api.php?action=opensearch&limit=15&search=\($0)&format=json" }
-        .flatMap { NSURL(string: $0) }
-
-    precondition(url.isSome(), "Could not encode URL")
-    return url!
+    if let escaped = (text.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        .map { "http://en.wikipedia.org/w/api.php?action=opensearch&limit=15&search=\($0)&format=json" }) {
+            if let url = NSURL(string: escaped) {
+                return url
+            }
+    }
+    preconditionFailure("Could not encode URL")
 }
 
 func pagesFromOpenSearchData(data: NSData) -> Result<[Page]> {
     var error: NSError?
 
-    let pages = asJSON(data, &error)
-        .flatMap { asJSONArray($0, &error) }
-        .flatMap { atIndex($0, 1, &error) }.flatMap{ asStringList($0, &error) }
-        .flatMap { asPages($0) }
+    if let json: JSON = asJSON(data, &error) {
+        if let array = asJSONArray(json, &error) {
+            if let second: JSON = atIndex(array, 1, &error) {
+                if let stringList = asStringList(second, &error) {
+                    return success(asPages(stringList))
+                }}}}
 
-    return Result(value: pages, error: error)
+    return failure(error!)
 }

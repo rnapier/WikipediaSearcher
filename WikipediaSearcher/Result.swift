@@ -149,20 +149,20 @@ extension NSError {
   }
 }
 
-extension Optional {
-  func flatMap<U>(f: T -> U?) -> U? {
-    if let t = self {
-      if let u = f(t) {
-        return u
-      }
-    }
-    return nil
-  }
-
-  func isSome() -> Bool {
-    switch self {
-    case .Some(_): return true
-    case .None: return false
-    }
-  }
-}
+//extension Optional {
+//  func flatMap<U>(f: T -> U?) -> U? {
+//    if let t = self {
+//      if let u = f(t) {
+//        return u
+//      }
+//    }
+//    return nil
+//  }
+//
+//  func isSome() -> Bool {
+//    switch self {
+//    case .Some(_): return true
+//    case .None: return false
+//    }
+//  }
+//}
