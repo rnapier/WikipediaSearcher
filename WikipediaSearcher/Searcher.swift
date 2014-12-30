@@ -39,7 +39,5 @@ func pagesFromOpenSearchData(data: NSData) -> Result<[Page]> {
         .flatMap { atIndex($0, 1, &error) }.flatMap{ asStringList($0, &error) }
         .flatMap { asPages($0) }
 
-    println("\(pages)  \(error)")
-
     return Result(value: pages, error: error)
 }
