@@ -82,16 +82,16 @@ func asPages(titles: [String]) -> Result<[Page]> {
   return .Success(Box(titles.map { Page(title: $0) }))
 }
 
-func asPage(dictionary: JSONDictionary) -> Result<Page> {
-  return success(dictionary)
-    >>== forKey("title") >>== asString
-    <**> { Page(title: $0) }
-}
-
-func asPages(array: JSONArray) -> Result<[Page]> {
-  return sequence(array.map {
-    success($0) >>== asJSONDictionary
-      >>== asPage
-    })
-}
-
+//func asPage(dictionary: JSONDictionary) -> Result<Page> {
+//  return success(dictionary)
+//    >>== forKey("title") >>== asString
+//    <**> { Page(title: $0) }
+//}
+//
+//func asPages(array: JSONArray) -> Result<[Page]> {
+//  return sequence(array.map {
+//    success($0) >>== asJSONDictionary
+//      >>== asPage
+//    })
+//}
+//
