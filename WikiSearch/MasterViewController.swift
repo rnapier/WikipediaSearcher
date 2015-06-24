@@ -106,9 +106,6 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
                     do {
                         pages = try search.wait()
                     }
-                    catch Error.HTTPFailure(let resp) {
-                        print("Received status: \(resp.statusCode)")
-                    }
                     catch Error.Cancelled {
                         print("Cancelled")
                     }
