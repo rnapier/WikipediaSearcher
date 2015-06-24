@@ -11,7 +11,10 @@ import Foundation
 typealias JSON = AnyObject
 
 enum Error : ErrorType {
+    case BadResponse(NSURLResponse?)
+    case HTTPFailure(NSHTTPURLResponse)
     case BadJSON(JSON)
+    case NoData
     case Cancelled
     case Unknown
 }
@@ -20,23 +23,21 @@ class Search {
     let text: String
 
     private var task: NSURLSessionDataTask?
-    private let resultQueue: dispatch_queue_t
+    private let resultGroup: dispatch_group_t
 
     private var data: NSData?
-    private var error: NSError?
 
     init(text: String) {
         self.text = text
-        self.resultQueue = dispatch_queue_create("search.future", DISPATCH_QUEUE_CONCURRENT)
-
-        dispatch_suspend(self.resultQueue)
+        self.resultGroup = dispatch_group_create()
+        dispatch_group_enter(self.resultGroup)
 
         let url = searchURLForString(text)
 
-        self.task = NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: { (data, response, err) in
+        // This is a retain loop, but the task will release this closure after it fires.
+        self.task = NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: { (data, _, _) in
             self.data = data
-            self.error = err
-            dispatch_resume(self.resultQueue)
+            dispatch_group_leave(self.resultGroup)
         })
         precondition(self.task != nil, "Could not create task")
 
@@ -44,31 +45,33 @@ class Search {
     }
 
     func result() throws -> [Page] {
-        var d : NSData?
-        var e : NSError?
-        dispatch_sync(self.resultQueue, {
-            d = self.data
-            e = self.error
-        })
+        dispatch_group_wait(self.resultGroup, DISPATCH_TIME_FOREVER) // Could put a timeout here in general, but NSURLSession already gives us that
 
-        if let e = e {
-            if e.domain == NSURLErrorDomain && e.code == NSURLErrorCancelled {
+        if let err = self.task?.error {
+            if err.domain == NSURLErrorDomain && err.code == NSURLErrorCancelled {
                 throw Error.Cancelled
             } else {
-                throw e
+                throw err
             }
         }
 
-        if let d = d {
-            return try pagesFromOpenSearchData(d)
+        guard let resp = self.task?.response as? NSHTTPURLResponse else {
+            throw Error.BadResponse(self.task?.response)
         }
 
-        throw Error.Unknown
+        guard 200..<300 ~= resp.statusCode else {
+            throw Error.HTTPFailure(resp)
+        }
+
+        guard let d = self.data else {
+            throw Error.NoData
+        }
+
+        return try pagesFromOpenSearchData(d)
     }
 
     func cancel() {
         self.task?.cancel()
-        self.task = nil
     }
 }
 

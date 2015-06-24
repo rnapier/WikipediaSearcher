@@ -8,6 +8,18 @@
 
 import UIKit
 
+func async(f: () -> Void) {
+    dispatch_async(dispatch_get_global_queue(Int(0), UInt(0))) {
+        f()
+    }
+}
+
+func syncMain(f: () -> Void) {
+    dispatch_sync(dispatch_get_main_queue()) {
+        f()
+    }
+}
+
 class MasterViewController: UITableViewController, UISearchResultsUpdating {
 
     var searchController: UISearchController?
@@ -89,16 +101,22 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
         if let searchString = searchController.searchBar.text {
             self.currentSearch = Search(text: searchString)
             if let search = self.currentSearch {
-                dispatch_async(dispatch_get_global_queue(Int(0), UInt(0))) {
-                    let pages: [Page]
+                async {
+                    var pages: [Page] = []
                     do {
                         pages = try search.result()
                     }
+                    catch Error.HTTPFailure(let resp) {
+                        print("Received status: \(resp.statusCode)")
+                    }
+                    catch Error.Cancelled {
+                        print("Cancelled")
+                    }
                     catch {
                         print(error)
-                        pages = []
                     }
-                    dispatch_async(dispatch_get_main_queue()) {
+
+                    syncMain {
                         self.pages = pages
                         self.tableView.reloadData()
                     }
