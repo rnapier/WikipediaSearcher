@@ -44,7 +44,7 @@ class Search {
         self.task?.resume()
     }
 
-    func result() throws -> [Page] {
+    func wait() throws -> [Page] {
         dispatch_group_wait(self.resultGroup, DISPATCH_TIME_FOREVER) // Could put a timeout here in general, but NSURLSession already gives us that
 
         if let err = self.task?.error {

@@ -104,7 +104,7 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
                 async {
                     var pages: [Page] = []
                     do {
-                        pages = try search.result()
+                        pages = try search.wait()
                     }
                     catch Error.HTTPFailure(let resp) {
                         print("Received status: \(resp.statusCode)")
