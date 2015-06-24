@@ -14,7 +14,6 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
     var detailViewController: DetailViewController? = nil
     var pages = [Page]()
 
-    let searcher = Searcher()
     var currentSearch: Search?
 
 
@@ -88,16 +87,23 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
         self.currentSearch?.cancel()
 
         if let searchString = searchController.searchBar.text {
-            self.currentSearch = self.searcher.search(searchString, completionHandler: { result in
-                do {
-                    try self.pages = result()
+            self.currentSearch = Search(text: searchString)
+            if let search = self.currentSearch {
+                dispatch_async(dispatch_get_global_queue(Int(0), UInt(0))) {
+                    let pages: [Page]
+                    do {
+                        pages = try search.result()
+                    }
+                    catch {
+                        print(error)
+                        pages = []
+                    }
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.pages = pages
+                        self.tableView.reloadData()
+                    }
                 }
-                catch {
-                    self.pages = []
-                }
-                self.tableView.reloadData()
-                }
-            )
+            }
         }
     }
 }
