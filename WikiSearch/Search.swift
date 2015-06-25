@@ -27,9 +27,13 @@ class Search {
 
     private var data: NSData?
 
+    convenience init() { self.init(text: "") }
+
     init(text: String) {
         self.text = text
         self.resultGroup = dispatch_group_create()
+        guard text != "" else { return }
+
         dispatch_group_enter(self.resultGroup)
 
         let url = searchURLForString(text)
@@ -84,31 +88,3 @@ private func searchURLForString(text: String) -> NSURL {
     return url!
 }
 
-// Crazy, but maybe brilliant, idea by @radexp
-// https://twitter.com/radexp/status/608754347061706752
-infix operator ?! {}
-func ?! <T>(a: T?, @autoclosure e: () -> ErrorType) throws -> T {
-    if let a = a {
-        return a
-    } else {
-        throw e()
-    }
-}
-
-extension Array {
-    subscript(safe index: Int) -> T? {
-        guard index < self.endIndex else { return nil }
-        return self[index]
-    }
-}
-
-func pagesFromOpenSearchData(data: NSData) throws -> [Page] {
-    let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
-
-    return try
-        (json as? [JSON])
-            .flatMap { $0[safe: 1] }
-            .flatMap { $0 as? [String] }
-            .map { $0.map { Page(title: $0)}}
-        ?! Error.BadJSON(json)
-}

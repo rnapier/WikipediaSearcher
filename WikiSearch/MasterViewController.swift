@@ -8,27 +8,42 @@
 
 import UIKit
 
-func async(f: () -> Void) {
-    dispatch_async(dispatch_get_global_queue(Int(0), UInt(0))) {
-        f()
-    }
-}
-
-func syncMain(f: () -> Void) {
-    dispatch_sync(dispatch_get_main_queue()) {
-        f()
-    }
-}
-
 class MasterViewController: UITableViewController, UISearchResultsUpdating {
 
     var searchController: UISearchController?
     var detailViewController: DetailViewController? = nil
     var pages = [Page]()
 
-    var currentSearch: Search?
+    var currentSearch = Search() {
+        willSet {
+            self.currentSearch.cancel()
+        }
+    }
 
+    // MARK: - UISearchResultsUpdating
 
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        let searchString = searchController.searchBar.text ?? ""
+        self.currentSearch = Search(text: searchString)
+
+        async {
+            var result: [Page] = []
+            do {
+                result = try self.currentSearch.wait()
+            }
+            catch Error.Cancelled {} // Ignore cancellation
+            catch                 { print(error) } // TODO: Wire this to a UI element
+
+            syncMain {
+                self.pages = result
+                self.tableView.reloadData()
+            }
+        }
+    }
+
+    //
+    // Below here is boilerplate UI
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -51,17 +66,11 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
         self.tableView.tableHeaderView = self.searchController?.searchBar
 
         self.definesPresentationContext = true
-
     }
 
     override func viewWillAppear(animated: Bool) {
         self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Segues
@@ -90,36 +99,6 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating {
         let object = pages[indexPath.row]
         cell.textLabel?.text = object.title
         return cell
-    }
-
-
-    // MARK: - UISearchResultsUpdating
-
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        self.currentSearch?.cancel()
-
-        if let searchString = searchController.searchBar.text {
-            self.currentSearch = Search(text: searchString)
-            if let search = self.currentSearch {
-                async {
-                    var pages: [Page] = []
-                    do {
-                        pages = try search.wait()
-                    }
-                    catch Error.Cancelled {
-                        print("Cancelled")
-                    }
-                    catch {
-                        print(error)
-                    }
-
-                    syncMain {
-                        self.pages = pages
-                        self.tableView.reloadData()
-                    }
-                }
-            }
-        }
     }
 }
 

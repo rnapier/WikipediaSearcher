@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FB281EFF1B279A0C00C5DB33 /* Searcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB281EFE1B279A0C00C5DB33 /* Searcher.swift */; };
+		FB281EFF1B279A0C00C5DB33 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB281EFE1B279A0C00C5DB33 /* Search.swift */; };
 		FB281F031B27A4FB00C5DB33 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB281F021B27A4FB00C5DB33 /* Page.swift */; };
 		FB8E0D6C1B27754400418FB2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D6B1B27754400418FB2 /* AppDelegate.swift */; };
 		FB8E0D6E1B27754400418FB2 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D6D1B27754400418FB2 /* MasterViewController.swift */; };
@@ -17,6 +17,7 @@
 		FB8E0D781B27754400418FB2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB8E0D761B27754400418FB2 /* LaunchScreen.storyboard */; };
 		FB8E0D831B27754400418FB2 /* WikiSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D821B27754400418FB2 /* WikiSearchTests.swift */; };
 		FB8E0D8E1B27754400418FB2 /* WikiSearchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D8D1B27754400418FB2 /* WikiSearchUITests.swift */; };
+		FBC5F48C1B3B606F00DF6789 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5F48B1B3B606F00DF6789 /* Async.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		FB281EFE1B279A0C00C5DB33 /* Searcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Searcher.swift; sourceTree = "<group>"; };
+		FB281EFE1B279A0C00C5DB33 /* Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		FB281F021B27A4FB00C5DB33 /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		FB8E0D681B27754400418FB2 /* WikiSearch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WikiSearch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB8E0D6B1B27754400418FB2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 		FB8E0D891B27754400418FB2 /* WikiSearchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WikiSearchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB8E0D8D1B27754400418FB2 /* WikiSearchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WikiSearchUITests.swift; sourceTree = "<group>"; };
 		FB8E0D8F1B27754500418FB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FBC5F48B1B3B606F00DF6789 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,10 +105,11 @@
 		FB8E0D6A1B27754400418FB2 /* WikiSearch */ = {
 			isa = PBXGroup;
 			children = (
-				FB281EFE1B279A0C00C5DB33 /* Searcher.swift */,
+				FB8E0D6D1B27754400418FB2 /* MasterViewController.swift */,
+				FB281EFE1B279A0C00C5DB33 /* Search.swift */,
+				FBC5F48B1B3B606F00DF6789 /* Async.swift */,
 				FB281F021B27A4FB00C5DB33 /* Page.swift */,
 				FB8E0D6B1B27754400418FB2 /* AppDelegate.swift */,
-				FB8E0D6D1B27754400418FB2 /* MasterViewController.swift */,
 				FB8E0D6F1B27754400418FB2 /* DetailViewController.swift */,
 				FB8E0D711B27754400418FB2 /* Main.storyboard */,
 				FB8E0D741B27754400418FB2 /* Assets.xcassets */,
@@ -267,7 +270,8 @@
 				FB8E0D701B27754400418FB2 /* DetailViewController.swift in Sources */,
 				FB8E0D6E1B27754400418FB2 /* MasterViewController.swift in Sources */,
 				FB281F031B27A4FB00C5DB33 /* Page.swift in Sources */,
-				FB281EFF1B279A0C00C5DB33 /* Searcher.swift in Sources */,
+				FB281EFF1B279A0C00C5DB33 /* Search.swift in Sources */,
+				FBC5F48C1B3B606F00DF6789 /* Async.swift in Sources */,
 				FB8E0D6C1B27754400418FB2 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
